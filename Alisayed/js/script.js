@@ -1,118 +1,63 @@
-const slider = tns({
-    container: '.carousel__inner',
-    items: 1,
-    slideBy: 'page',
-    autoHeight: true,
-    autoplay: false,
-    controls: false,
-    nav: false
-});
+"use strict";
 
-document.querySelector('.prev').addEventListener('click', function() {
-    slider.goTo('prev');
-});
+window.addEventListener('DOMContentLoaded', function() {
 
-document.querySelector('.next').addEventListener('click', function() {
-    slider.goTo('next');
-});
-
-$(document).ready(function() {
-    $('ul.catalog__tabs').on('click', 'li:not(.catalog__tab_active)', function() {
-        $(this)
-            .addClass('catalog__tab_active').siblings().removeClass('catalog__tab_active')
-            .closest('div.container').find('div.catalog__content').removeClass('catalog__content_active').eq($(this).index()).addClass('catalog__content_active');
-    });
-
-
-    function toggleSlide(item) {
-        $(item).each(function(i) {
-            $(this).on('click', function(e) {
-                e.preventDefault();
-                $('.catalog-item__content').eq(i).toggleClass('catalog-item__content_active');
-                $('.catalog-item__list').eq(i).toggleClass('catalog-item__list_active');
-            })
-        });
+    let message = {
+        loading: 'Загрузка ...',
+        success: 'Спасибо! Скоро мы с вами свяжемся!',
+        failure: 'Что-то пошло не так ...'
     };
 
-    toggleSlide('.catalog-item__link');
-    toggleSlide('.catalog-item__back');
+    let form = document.querySelector('.feed-form'),
+        input = form.getElementsByTagName('input'),
+        statusMessage = document.createElement('div');
 
-    //Modal
+    statusMessage.classList.add('status');
 
-    $('[data-modal=consultation').on('click', function() {
-        $('.overlay, #consultation').fadeIn('slow');
+    function sendToServer(formName, inputName) {
+        formName.addEventListener('submit', function(event) {
+            event.preventDefault();
+            formName.appendChild(statusMessage);
 
-    });
-    $('.modal__close').on('click', function() {
-        $('.overlay, #consultation, #order, #thanks').fadeOut('slow');
-    });
+            let request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
-    $('.button_mini').each(function(i) {
-        $(this).on('click', function() {
-            $('#order .modal__descr').text($('.catalog-item__subtitle').eq(i).text());
-            $('.overlay, #order').fadeIn('slow');
-        })
-    })
+            let formData = new FormData(formName);
 
-    function valideForms(form) {
-        $(form).validate({
-            rules: {
-                name: "required",
-                tel: "required",
-                email: {
-                    required: true,
-                    email: true
+            let obj = {};
+            formData.forEach(function(value, key) {
+                obj[key] = value;
+            });
+            let json = JSON.stringify(obj);
+
+            request.send(json);
+
+            request.addEventListener('readystatechange', function() {
+                if (request.readyState < 4) {
+                    statusMessage.innerHTML = message.loading;
+                } else if (request.readyState === 4 && request.status == 200) {
+                    statusMessage.innerHTML = message.success;
+                } else {
+                    statusMessage.innerHTML = message.failure;
                 }
-            },
-            messages: {
-                name: "Пожалуйста, введите своё имя",
-                tel: "Пожалуйста, введите свой номер телефона",
-                email: {
-                    required: "Пожалуйста, введите свою почту",
-                    email: "Ваш адрес почты должен быть в формате name@domain.com"
-                }
+            });
+
+            for (let i = 0; i < inputName.length; i++) {
+                inputName[i].value = '';
             }
         });
-    };
+    }
 
-    valideForms('#consultation-form');
-    valideForms('#consultation form');
-    valideForms('#order form');
+    sendToServer(form, input);
 
-    $('input[name=tel]').mask("+7 (999) 999-99-99");
 
-    $('form').submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "mailer/smart.php",
-            data: $(this).serialize()
-        }).done(function() {
-            $(this).find("input").val("");
+    //Hamburger
 
-            $('#consultation, #order').fadeOut();
-            $('.overlay, #thanks').fadeIn('slow');
+    const hamburger = document.querySelector('.hamburger');
 
-            $('form').trigger('reset');
-        });
-        return false;
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('hamburger_active');
     });
 
-    //Smooth scroll and pageup
-
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 1600) {
-            $('.pageup').fadeIn();
-        } else {
-            $('.pageup').fadeOut();
-        }
-    });
-
-    $("a[href^='#']").click(function() {
-        const _href = $(this).attr("href");
-        $("html, body").animate({ scrollTop: $(_href).offset().top + "px" });
-        return false;
-    });
-
-    new WOW().init();
 });
