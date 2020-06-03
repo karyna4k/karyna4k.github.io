@@ -5,7 +5,7 @@ My portfolio:
 - SASS
 2. http://karyna4k.github.io/Runsmart 
   - Flexbox
-  - Native JS
+  - Pure JS
   - tns-slider
   - SCSS
   - Gulp
@@ -19,3 +19,7 @@ My portfolio:
   - Gulp
   
 5. https://karyna4k.github.io/MailBit
+  - Flexbox
+  - Pure JS
+  - SCSS
+  - Gulp
