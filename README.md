@@ -17,9 +17,4 @@ My portfolio:
   - Bootstrap
   - SCSS
   - Gulp
-  
-5. https://karyna4k.github.io/MailBit
-  - Flexbox
-  - Pure JS
-  - SCSS
-  - Gulp
+ 
