@@ -13,11 +13,7 @@ My portfolio:
   - tns-slider
   - SCSS
   - Gulp
-4. http://karyna4k.github.io/Alisayed
-  - Grid
-  - Gulp
-  - SCSS
-5. https://karyna4k.github.io/Prengi
+4. https://karyna4k.github.io/Prengi
   - Bootstrap
   - SCSS
   - Gulp
