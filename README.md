@@ -4,9 +4,6 @@ My portfolio:
   - SCSS
   - jQuery
   - Gulp
-2. http://karyna4k.github.io/Uber 
-  - Bootstrap
-  - SASS
 3. http://karyna4k.github.io/Runsmart 
   - Flexbox
   - Pure JS
